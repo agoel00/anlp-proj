@@ -1,0 +1,1122 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "FEVER: Create dataset stats",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/create_dataset_stats.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--train_data_path=train_data/train.jsonl",
+                "--dev_data_path=train_data/dev.jsonl",
+                "--out_path=data/stats/"
+            ],
+        },
+        {
+            "name": "FEVER: Create corpus",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/create_corpus.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--out_path=data/corpus/"
+            ],
+        },
+        {
+            "name": "FEVER: Create stemmed corpus",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/create_stemmed_corpus.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--corpus_path=data/corpus/",
+                "--out_path=data/stemmed_corpus/"
+            ],
+        },
+        {
+            "name": "FEVER: Create corpus stats",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/create_corpus_stats.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--corpus_path=data/corpus/",
+                "--doc_len_dist_file=data/stats/doc_len_dist.json",
+                "--term_counts_file=data/stats/term_counts.json"
+            ],
+        },
+        {
+            "name": "FEVER: Create Tapas Data (Train)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/create_tapas_data.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--data_path=train_data/train.jsonl",
+                "--out_file=data/tapas/train/tapas_train.jsonl"
+            ],
+        },
+        {
+            "name": "FEVER: Create Tapas Data (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/create_tapas_data.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--data_path=train_data/dev.jsonl",
+                "--out_file=data/tapas/tapas_dev.jsonl"
+            ],
+        },
+        {
+            "name": "FEVER: Create Tapas Tables (Train)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/create_tapas_tables.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--tapas_train_path=data/tapas/tapas_train.jsonl",
+                "--out_path=data/tapas/train_data/",
+                "--table_out_path=data/tapas/tables/",
+            ],
+        },
+        {
+            "name": "FEVER: Create Tapas Tables (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/create_tapas_tables.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--tapas_train_path=data/tapas/dev/tapas_dev.jsonl",
+                "--out_path=data/tapas/dev/",
+                "--table_out_path=data/tapas/dev/tables/",
+                "--write_to_files=True"
+            ],
+        },
+        {
+            "name": "FEVER: Create TF-IDF",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/create_tfidf.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--corpus_path=data/stemmed_corpus/",
+                "--vectorizer_out_file=tfidf/vectorizer.pickle",
+                "--wm_out_file=tfidf/tfidf_wm.pickle",
+                "--out_path=tfidf/"
+            ],
+        },
+        {
+            "name": "FEVER: Create title TF-IDF (Bigrams)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/create_title_tfidf.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--corpus_path=data/corpus/",
+                "--vectorizer_out_file=tfidf/title_vectorizer.pickle",
+                "--wm_out_file=tfidf/title_tfidf_wm.pickle",
+                "--n_gram_min=2",
+                "--n_gram_max=2"
+            ],
+        },
+        {
+            "name": "FEVER: Create title TF-IDF (1-4 grams)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/create_title_tfidf.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--corpus_path=data/corpus/",
+                "--vectorizer_out_file=tfidf/title_vectorizer-ngram=1-4.pickle",
+                "--wm_out_file=tfidf/title_tfidf_wm-ngram=1-4.pickle",
+                "--n_gram_min=1",
+                "--n_gram_max=4"
+            ],
+        },
+        {
+            "name": "FEVER: Retrieve documents (Train)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/document_retrieval.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--doc_id_map_path=tfidf/doc_id_map.json",
+                "--data_path=train_data/train.jsonl",
+                "--vectorizer_path=tfidf/vectorizer-stemmed-32bit.pickle",
+                "--wm_path=tfidf/tfidf_wm-stemmed-32bit.pickle",
+                "--title_vectorizer_path=tfidf/title_vectorizer-32bit.pickle",
+                "--title_wm_path=tfidf/title_tfidf_wm-32bit.pickle",
+                "--out_file=data/document_retrieval/top_docs.jsonl"
+            ],
+        },
+        {
+            "name": "FEVER: Retrieve documents (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/document_retrieval.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--doc_id_map_path=tfidf/doc_id_map.json",
+                "--data_path=train_data/dev.jsonl",
+                "--vectorizer_path=tfidf/vectorizer-stemmed-32bit.pickle",
+                "--wm_path=tfidf/tfidf_wm-stemmed-32bit.pickle",
+                "--title_vectorizer_path=tfidf/title_vectorizer-32bit.pickle",
+                "--title_wm_path=tfidf/title_tfidf_wm-32bit.pickle",
+                "--out_file=data/dev/top_docs.jsonl"
+            ],
+        },
+        {
+            "name": "FEVER: Retrieve documents (Dev, text only)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/document_retrieval.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--doc_id_map_path=tfidf/doc_id_map.json",
+                "--data_path=train_data/dev.jsonl",
+                "--vectorizer_path=tfidf/vectorizer.pickle",
+                "--wm_path=tfidf/tfidf_wm.pickle",
+                "--out_file=data/dev/top_docs_text-only.jsonl",
+                "--only_text"
+            ],
+        },
+        {
+            "name": "FEVER: Retrieve documents (Dev, title ngrams=1-4)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/document_retrieval.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--doc_id_map_path=tfidf/doc_id_map.json",
+                "--data_path=train_data/dev.jsonl",
+                "--vectorizer_path=tfidf/vectorizer-stemmed-32bit.pickle",
+                "--wm_path=tfidf/tfidf_wm-stemmed-32bit.pickle",
+                "--title_vectorizer_path=tfidf/title_vectorizer-ngram=1-4.pickle",
+                "--title_wm_path=tfidf/title_tfidf_wm-ngram=1-4.pickle",
+                "--out_file=data/dev/top_docs-title-ngram=1-4.jsonl"
+            ],
+        },
+        {
+            "name": "FEVER: Retrieve documents (Dev, title ngrams=1-4, titles only)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/document_retrieval.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--doc_id_map_path=tfidf/doc_id_map.json",
+                "--data_path=train_data/dev.jsonl",
+                "--title_vectorizer_path=tfidf/title_vectorizer-ngram=1-4.pickle",
+                "--title_wm_path=tfidf/title_tfidf_wm-ngram=1-4.pickle",
+                "--out_file=data/dev/top_docs_title-ngram=1-4_titles-only.jsonl",
+                "--only_titles"
+            ],
+        },
+        {
+            "name": "FEVER: Retrieve documents with entity matching (Dev, title ngrams=1-4)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/document_retrieval.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--doc_id_map_path=tfidf/doc_id_map.json",
+                "--data_path=train_data/dev.jsonl",
+                "--vectorizer_path=tfidf/vectorizer.pickle",
+                "--wm_path=tfidf/tfidf_wm.pickle",
+                "--title_vectorizer_path=tfidf/title_vectorizer-ngram=1-4.pickle",
+                "--title_wm_path=tfidf/title_tfidf_wm-ngram=1-4.pickle",
+                "--entity_matched_docs_path=data/dev/top_docs_entity_matching.jsonl",
+                "--out_file=data/dev/top_docs_title-ngram=1-4_entity_matching.jsonl",
+                "--use_entity_matching"
+            ],
+        },
+        {
+            "name": "FEVER: Retrieve entity matched docs (Train)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/document_retrieval_entity_matching.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--doc_id_map_path=tfidf/doc_id_map.json",
+                "--data_path=train_data/train.jsonl",
+                "--out_file=data/train/top_docs_entity_matching.jsonl",
+            ],
+        },
+        {
+            "name": "FEVER: Retrieve entity matched docs (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/document_retrieval_entity_matching.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--doc_id_map_path=tfidf/doc_id_map.json",
+                "--data_path=train_data/dev.jsonl",
+                "--out_file=data/dev/top_docs_entity_matching.jsonl",
+            ],
+        },
+        {
+            "name": "FEVER: NER document retrieval (Train)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/ner_doc_retrieval.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--data_path=train_data/train.jsonl",
+                "--top_term_counts_file=data/stats/top_term_counts.json",
+                "--out_file=data/ner_retrieval/top_docs_train.jsonl",
+            ],
+        },
+        {
+            "name": "FEVER: NER document retrieval (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/ner_doc_retrieval.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--data_path=train_data/dev.jsonl",
+                "--top_term_counts_file=data/stats/top_term_counts.json",
+                "--out_file=data/ner_retrieval/top_docs_dev_filtered.jsonl",
+                "--filter_entities"
+            ],
+        },
+        {
+            "name": "FEVER: Document retrieval with Longformer (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/doc_retrieval_with_longformer.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--data_path=train_data/dev.jsonl",
+                "--out_file=data/longformer_retrieval/top_docs_dev.jsonl",
+            ],
+        },
+        {
+            "name": "FEVER: Eval document retrieval with Longformer (Train)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/eval_longformer_retrieval.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--doc_id_to_idx_path=data/longformer_retrieval/doc_id_to_idx.json",
+                "--data_path=train_data/train.jsonl",
+                "--corpus_matrix_path=data/longformer_retrieval/doc_embeddings.pt",
+                "--out_file=data/longformer_retrieval/top_docs_train.jsonl",
+            ],
+        },
+        {
+            "name": "FEVER: Eval document retrieval with Longformer (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/eval_longformer_retrieval.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--doc_id_to_idx_path=data/longformer_retrieval/doc_id_to_idx.json",
+                "--data_path=train_data/dev.jsonl",
+                "--corpus_matrix_path=data/longformer_retrieval/doc_embeddings.pt",
+                "--out_file=data/longformer_retrieval/top_docs_dev.jsonl",
+            ],
+        },
+        {
+            "name": "FEVER: Merge NER and TF-IDF retrieval (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/merge_ner_and_tfidf_retrieval.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--ner_docs_path=data/ner_retrieval/top_docs_dev_filtered.jsonl",
+                "--tfidf_docs_path=data/dev/top_docs.jsonl",
+                "--out_file=data/ner_retrieval/top_docs_ner_and_tfidf_dev_filtered.jsonl",
+            ],
+        },
+        {
+            "name": "FEVER: Calculate document retrieval accuracy (Train)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/calculate_doc_retrieval_accuracy.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--data_path=train_data/train.jsonl",
+                "--top_docs_file=data/document_retrieval/top_docs.jsonl",
+                "--out_file=data/doc_retrieval_acc.json"
+            ],
+        },
+        {
+            "name": "FEVER: Calculate document retrieval accuracy (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/calculate_doc_retrieval_accuracy.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--data_path=train_data/dev.jsonl",
+                "--top_docs_file=data/dev/top_docs.jsonl",
+                "--out_file=data/dev/doc_retrieval_acc.json"
+            ],
+        },
+        {
+            "name": "FEVER: Calculate document retrieval accuracy (Dev, text only)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/calculate_doc_retrieval_accuracy.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--data_path=train_data/dev.jsonl",
+                "--top_docs_file=data/dev/top_docs_text-only.jsonl",
+                "--out_file=data/dev/doc_retrieval_acc_text-only.json"
+            ],
+        },
+        {
+            "name": "FEVER: Calculate document retrieval accuracy (Dev, title ngrams=1-4)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/calculate_doc_retrieval_accuracy.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--data_path=train_data/dev.jsonl",
+                "--top_docs_file=data/dev/top_docs-title-ngram=1-4.jsonl",
+                "--out_file=data/dev/doc_retrieval_acc-title-ngram=1-4.json"
+            ],
+        },
+        {
+            "name": "FEVER: Calculate document retrieval accuracy (Dev, title ngrams=1-4, titles only)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/calculate_doc_retrieval_accuracy.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--data_path=train_data/dev.jsonl",
+                "--top_docs_file=data/dev/top_docs_title-ngram=1-4_titles-only.jsonl",
+                "--out_file=data/dev/doc_retrieval_acc_title-ngram=1-4_titles-only.json"
+            ],
+        },
+        {
+            "name": "FEVER: Calculate document retrieval accuracy with entity matching (Train)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/calculate_doc_retrieval_accuracy.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--data_path=train_data/train.jsonl",
+                "--top_docs_file=data/train/top_docs_entity_matching.jsonl",
+                "--out_file=data/train/doc_retrieval_acc_entity_matching.json"
+            ],
+        },
+        {
+            "name": "FEVER: Calculate document retrieval accuracy with entity matching (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/calculate_doc_retrieval_accuracy.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--data_path=train_data/dev.jsonl",
+                "--top_docs_file=data/dev/top_docs_title-ngram=1-4_entity_matching.jsonl",
+                "--out_file=data/dev/doc_retrieval_acc_entity_matching.json"
+            ],
+        },
+        {
+            "name": "FEVER: Calculate document retrieval accuracy (NER Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/calculate_doc_retrieval_accuracy.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--data_path=train_data/dev.jsonl",
+                "--top_docs_file=data/ner_retrieval/top_docs_ner_and_tfidf_dev_filtered.jsonl",
+                "--out_file=data/ner_retrieval/retrieval_acc_dev.json"
+            ],
+        },
+        {
+            "name": "FEVER: Retrieve top sentences (Train)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/sent_retrieval/sentence_retrieval.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--top_docs_file=data/document_retrieval/top_10_docs.jsonl",
+                "--out_file=data/document_retrieval/top_sents.jsonl",
+                "--n_gram_min=1",
+                "--n_gram_max=3"
+            ],
+        },
+        {
+            "name": "FEVER: Retrieve top sentences (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/sent_retrieval/sentence_retrieval.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--top_docs_file=data/dev/top_docs.jsonl",
+                "--out_file=data/dev/top_sents.jsonl",
+                "--n_gram_min=1",
+                "--n_gram_max=3"
+            ],
+        },
+        {
+            "name": "FEVER: Retrieve top sentences using word vectors (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/sent_retrieval/sent_retrieval_word_vectors.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--data_path=train_data/dev.jsonl",
+                "--top_docs_file=data/dev/top_docs.jsonl",
+                "--out_file=data/dev/top_sents_word-vecs.jsonl",
+            ],
+        },
+        {
+            "name": "FEVER: Calculate sentence retrieval accuracy (Train)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/sent_retrieval/calculate_sentence_retrieval_accuracy.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--data_path=train_data/train.jsonl",
+                "--top_sents_file=data/document_retrieval/top_sents.jsonl",
+            ],
+        },
+        {
+            "name": "FEVER: Calculate sentence retrieval accuracy (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/sent_retrieval/calculate_sentence_retrieval_accuracy.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--data_path=train_data/dev.jsonl",
+                "--top_sents_file=data/dev/top_sents.jsonl",
+                "--out_file=data/dev/sent_retrieval_acc.json"
+            ],
+        },
+        {
+            "name": "FEVER: Calculate sentence retrieval with word vectors accuracy (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/sent_retrieval/calculate_sentence_retrieval_accuracy.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--data_path=train_data/dev.jsonl",
+                "--top_sents_file=data/dev/top_sents_word-vecs.jsonl",
+                "--out_file=data/dev/sent_retrieval_acc_word-vecs.json"
+            ],
+        },
+        {
+            "name": "Tapas: Preprocess FEVEROUS",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tapas/tapas/scripts/preprocess_nq.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--input_path=data/tapas_test",
+                "--output_path=data/tapas_test",
+                "--runner_type=direct",
+                "--fever"
+            ]
+        },
+        {
+            "name": "Tapas: Create Retrieval Data",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tapas/tapas/retrieval/create_retrieval_data_main.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--input_interactions_dir=data/tapas/tf_records/interactions",
+                "--input_tables_dir=data/tapas/tf_records/tables",
+                "--output_dir=data/tapas/tf_records/tf_examples",
+                "--vocab_file=tapas_dual_encoder_proj_256_tiny/vocab.txt",
+                "--max_seq_length=512",
+                "--max_column_id=512",
+                "--max_row_id=512",
+                "--use_document_title"
+            ]
+        },
+        {
+            "name": "Tapas: Table Retriever Experiment (Train)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tapas/tapas/experiments/table_retriever_experiment.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--do_train",
+                "--keep_checkpoint_max=40",
+                "--model_dir=tapas_models",
+                "--input_file_train=data/tapas/tf_records/tf_examples/train.tfrecord",
+                "--bert_config_file=tapas_dual_encoder_proj_256_tiny/bert_config.json",
+                "--init_checkpoint=tapas_dual_encoder_proj_256_tiny/model.ckpt",
+                "--init_from_single_encoder=false",
+                "--down_projection_dim=256",
+                "--num_train_examples=65000",
+                "--learning_rate=1.25e-5",
+                "--train_batch_size=256",
+                "--warmup_ratio=0.01",
+                "--max_seq_length=512"
+            ]
+        },
+        {
+            "name": "Tapas: Table Retriever Experiment (Eval)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tapas/tapas/experiments/table_retriever_experiment.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--do_predict",
+                "--model_dir=tapas_models",
+                "--input_file_eval=data/tapas/tf_records/tf_examples/dev.tfrecord",
+                "--bert_config_file=tapas_dual_encoder_proj_256_tiny/bert_config.json",
+                "--init_from_single_encoder=false",
+                "--down_projection_dim=256",
+                "--eval_batch_size=32",
+                "--num_train_examples=65000",
+                "--max_seq_length=512"
+            ]
+        },
+        {
+            "name": "Tapas: Table Retriever Predict (Train)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tapas/tapas/experiments/table_retriever_experiment.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--do_predict",
+                "--model_dir=tapas_models",
+                "--prediction_output_dir=tapas_models/train",
+                "--evaluated_checkpoint_metric=precision_at_1",
+                "--input_file_predict=data/tapas/tf_records/tf_examples/train.tfrecord",
+                "--bert_config_file=tapas_dual_encoder_proj_256_tiny/bert_config.json",
+                "--init_from_single_encoder=false",
+                "--down_projection_dim=256",
+                "--eval_batch_size=32",
+                "--max_seq_length=512"
+            ]
+        },
+        {
+            "name": "Tapas: Table Retriever Predict (Tables)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tapas/tapas/experiments/table_retriever_experiment.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--do_predict",
+                "--model_dir=tapas_models",
+                "--prediction_output_dir=tapas_models/tables",
+                "--evaluated_checkpoint_metric=precision_at_1",
+                "--input_file_predict=data/tapas/tf_records/tf_examples/tables.tfrecord",
+                "--bert_config_file=tapas_dual_encoder_proj_256_tiny/bert_config.json",
+                "--init_from_single_encoder=false",
+                "--down_projection_dim=256",
+                "--eval_batch_size=32",
+                "--max_seq_length=512"
+            ]
+        },
+        {
+            "name": "Tapas: Table Retriever Predict (Test)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tapas/tapas/experiments/table_retriever_experiment.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--do_predict",
+                "--model_dir=tapas_models",
+                "--prediction_output_dir=tapas_models/test",
+                "--evaluated_checkpoint_metric=precision_at_1",
+                "--input_file_predict=data/tapas/tf_records/tf_examples/test.tfrecord",
+                "--bert_config_file=tapas_dual_encoder_proj_256_tiny/bert_config.json",
+                "--init_from_single_encoder=false",
+                "--down_projection_dim=256",
+                "--eval_batch_size=32",
+                "--max_seq_length=512"
+            ]
+        },
+        {
+            "name": "Tapas: Generate Retrieval Results (Train)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tapas/tapas/scripts/eval_table_retriever.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--prediction_files_local=tapas_models/train/predict_results_253.tsv",
+                "--prediction_files_global=tapas_models/tables/predict_results_253.tsv",
+                "--retrieval_results_file_path=tapas_models/train_knn.jsonl"
+            ]
+        },
+        {
+            "name": "Tapas: Generate Retrieval Results (Test)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tapas/tapas/scripts/eval_table_retriever.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--prediction_files_local=tapas_models/test/predict_results_253.tsv",
+                "--prediction_files_global=tapas_models/tables/predict_results_253.tsv",
+                "--retrieval_results_file_path=tapas_models/test_knn.jsonl"
+            ]
+        },
+        {
+            "name": "Tapas: Generate Retrieval Results (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tapas/tapas/scripts/eval_table_retriever.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--prediction_files_local=tapas_models/eval_results_253.tsv",
+                "--prediction_files_global=tapas_models/tables/predict_results_253.tsv",
+                "--retrieval_results_file_path=tapas_models/dev_knn.jsonl"
+            ]
+        },
+        {
+            "name": "Tapas: Create E2E Interactions",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tapas/tapas/retrieval/create_e2e_interactions.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--input_dir=data/tapas/tf_records/interactions",
+                "--table_file=data/tapas/tf_records/tables/tables.tfrecord",
+                "--output_dir=data/tapas/tf_records/e2e/retrieval/interactions"
+            ]
+        },
+        {
+            "name": "Tapas: Run main task NQ_RETRIEVAL",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tapas/tapas/run_task_main.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--task=NQ_RETRIEVAL",
+                "--verbosity=-1",
+                "--output_dir=data/tapas/tf_records/e2e",
+                "--input_dir=data/tapas/tf_records/e2e",
+                "--bert_vocab_file=tapas_dual_encoder_proj_256_tiny/vocab.txt",
+                "--mode=create_data",
+                "--use_document_title",
+                "--update_answer_coordinates",
+                "--drop_rows_to_fit"
+            ]
+        },
+        {
+            "name": "Tapas: Fine Tune Model",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tapas/tapas/run_task_main.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--task=NQ_RETRIEVAL",
+                "--output_dir=data/tapas/tf_records/nq/sample/e2e",
+                "--model_dir=tapas_models/nq_e2e",
+                "--init_checkpoint=tapas_dual_encoder_proj_256_tiny/model.ckpt",
+                "--bert_config_file=tapas_dual_encoder_proj_256_tiny/bert_config.json",
+                "--mode=train"
+            ]
+        },
+        {
+            "name": "Tapas: Predict and Evaluate",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tapas/tapas/run_task_main.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--task=NQ_RETRIEVAL",
+                "--output_dir=data/tapas/tf_records/nq/sample/e2e",
+                "--model_dir=tapas_models/nq_e2e",
+                "--init_checkpoint=tapas_dual_encoder_proj_256_tiny/model.ckpt",
+                "--bert_config_file=tapas_dual_encoder_proj_256_tiny/bert_config.json",
+                "--bert_vocab_file=tapas_dual_encoder_proj_256_tiny/vocab.txt",
+                "--mode=predict_and_evaluate"
+            ]
+        },
+        {
+            "name": "FEVER: Train tapas model",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/entailment/entailment_with_tapas.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--train_csv_path=data/tapas/train_data/tapas_data.csv",
+                "--tapas_model_name=google/tapas-tiny",
+                "--model_path=models/",
+                "--batch_size=32"
+            ],
+            "justMyCode": false
+        },
+        {
+            "name": "FEVER: Eval tapas model",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/entailment/entailment_with_tapas_predict.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--table_csv_path=data/tapas/dev/tables/",
+                "--eval_csv_path=data/tapas/dev/tapas_data.csv",
+                "--tapas_model_name=google/tapas-tiny",
+                "--model_path=models/tapas_model.pth",
+                "--batch_size=1",
+            ],
+            "justMyCode": false
+        },
+        {
+            "name": "FEVER: Create Sentence Entailment Data (Train)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/create_sentence_entailment_data.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--input_data_file=train_data/train.jsonl",
+                "--output_data_file=data/sentence_entailment_train_data.jsonl",
+            ],
+        },
+        {
+            "name": "FEVER: Create Sentence Entailment Data (Eval)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/create_sentence_entailment_data.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--input_data_file=train_data/dev.jsonl",
+                "--output_data_file=data/sentence_entailment_eval_data.jsonl",
+            ],
+        },
+        {
+            "name": "FEVER: Create Sentence Entailment Data (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/create_sentence_entailment_data.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--input_data_file=data/dev/top_sents.jsonl",
+                "--output_data_file=data/dev/sentence_entailment_data.jsonl",
+                "--is_predict"
+            ],
+        },
+        {
+            "name": "FEVER: Entailment with T5",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/entailment/entailment_with_t5.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--data_path=data/sentence_entailment_train_data.jsonl",
+            ],
+            "justMyCode": false
+        },
+        {
+            "name": "FEVER: Create ID Label Map",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/create_id_label_map.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--train_data_file=train_data/train.jsonl",
+                "--dev_data_file=train_data/dev.jsonl",
+                "--train_out_file=data/id_label_map_train.json",
+                "--dev_out_file=data/dev/id_label_map_eval.json",
+            ],
+        },
+        {
+            "name": "FEVER: Merge Table and Sentence Data (Train)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/merge_table_and_sentence_data.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--tapas_csv_file=data/tapas/train_data/tapas_data.csv",
+                "--sentence_data_file=data/sentence_entailment_train_data.jsonl",
+                "--id_label_map_file=data/id_label_map_train.json",
+                "--out_file=data/entailment_train_data.csv",
+            ],
+        },
+        {
+            "name": "FEVER: Merge Table and Sentence Data (Eval)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/merge_table_and_sentence_data.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--tapas_csv_file=data/tapas/dev/tapas_data.csv",
+                "--sentence_data_file=data/sentence_entailment_eval_data.jsonl",
+                "--id_label_map_file=data/id_label_map_eval.json",
+                "--out_file=data/entailment_eval_data.csv",
+            ],
+        },
+        {
+            "name": "FEVER: Merge Table and Sentence Data (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/merge_table_and_sentence_data_test_set.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--tapas_csv_file=data/tapas/dev/tapas_data.csv",
+                "--sentence_data_file=data/dev/sentence_entailment_data.jsonl",
+                "--out_file=data/dev/entailment_data.csv",
+            ],
+        },
+        {
+            "name": "FEVER: Train Veracity Prediction Model",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/entailment/train_veracity_prediction_model.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--train_csv_path=data/entailment_train_data.csv",
+                "--batch_size=32",
+                "--out_path=models/",
+            ],
+            "justMyCode": false
+        },
+        {
+            "name": "FEVER: Eval Veracity Prediction Model",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/entailment/eval_veracity_prediction_model.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--csv_file=data/entailment_eval_data.csv",
+                "--model_file=models/veracity_prediction_model.pth",
+                "--batch_size=16",
+                "--out_file=data/dev/veracity_prediction_accuracy.json"
+            ],
+            "justMyCode": false
+        },
+        {
+            "name": "FEVER: Retrieve Tables with Tapas (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/table_retrieval/retrieve_tables_with_tapas.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--output_dir=data/dev/",
+                "--model_dir=tapas_models",
+                "--init_checkpoint=tapas_dual_encoder_proj_256_tiny/model.ckpt",
+                "--bert_config_file=tapas_dual_encoder_proj_256_tiny/bert_config.json",
+                "--top_docs_file=data/dev/top_docs.jsonl",
+            ],
+            "justMyCode": false
+        },
+        {
+            "name": "FEVER: Retrieve Table cells (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/table_retrieval/retrieve_table_cells.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--data_file=data/dev/top_tables.jsonl",
+                "--model_file=models/tapas_model.pth",
+                "--batch_size=64",
+                "--out_dir=data/dev/",
+                "--out_file=data/dev/top_table_cells.jsonl",
+            ],
+        },
+        {
+            "name": "FEVER: Retrieve Table cells (Test)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/table_retrieval/retrieve_table_cells.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--data_file=data/test/top_5_tables.jsonl",
+                "--model_file=models/tapas_model.pth",
+                "--batch_size=64",
+                "--out_dir=data/test/",
+                "--out_file=data/test/top_table_cells.jsonl",
+            ],
+        },
+        {
+            "name": "FEVER: Eval Table Cell Retriever (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/table_retrieval/eval_table_cell_retriever.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--retrieved_cells_file=data/dev/top_table_cells.jsonl",
+                "--data_file=train_data/dev.jsonl",
+                "--out_file=data/dev/table_retriever_eval.json",
+            ],
+        },
+        {
+            "name": "FEVER: Predict Veracity (Dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/entailment/predict_veracity.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--in_file=data/dev/entailment_data.csv",
+                "--model_file=models/veracity_prediction_model.pth",
+                "--batch_size=16",
+                "--out_file=data/dev/veracity_predictions.jsonl",
+            ],
+        },
+        {
+            "name": "FEVER: Create final results (dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/create_final_results.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--data_file=train_data/dev.jsonl",
+                "--veracity_predictions_file=data/dev/veracity_predictions.jsonl",
+                "--sentence_evidence_file=data/dev/top_sents.jsonl",
+                "--table_evidence_file=data/dev/top_table_cells.jsonl",
+                "--out_file=data/dev/final_output.jsonl",
+                "--add_gold_labels"
+            ],
+        },
+        {
+            "name": "FEVER: Calculate FEVEROUS score (dev)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/FEVEROUS/evaluation/evaluate.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--input_path=data/dev/final_output.jsonl",
+                "--use_gold_verdict"
+            ],
+        },
+        {
+            "name": "FEVER: Run End 2 End",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/run_e2e.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--doc_id_map_path=tfidf/doc_id_map.json",
+                "--vectorizer_path=tfidf/vectorizer-stemmed-32bit.pickle",
+                "--wm_path=tfidf/tfidf_wm-stemmed-32bit.pickle",
+                "--title_vectorizer_path=tfidf/title_vectorizer-32bit.pickle",
+                "--title_wm_path=tfidf/title_tfidf_wm-32bit.pickle",
+                "--tapas_bert_config_file=tapas_dual_encoder_proj_256_tiny/bert_config.json",
+                "--table_output_dir=data/table_retrieval/",
+                "--out_dir=data/e2e/",
+                "--tapas_model_path=models/tapas_model.pth",
+            ],
+        },
+        {
+            "name": "TEST: Retrieve documents",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/doc_retrieval/document_retrieval.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--doc_id_map_path=tfidf/doc_id_map.json",
+                "--data_path=train_data/feverous_test_unlabeled.jsonl",
+                "--vectorizer_path=tfidf/vectorizer-stemmed-32bit.pickle",
+                "--wm_path=tfidf/tfidf_wm-stemmed-32bit.pickle",
+                "--title_vectorizer_path=tfidf/title_vectorizer-32bit.pickle",
+                "--title_wm_path=tfidf/title_tfidf_wm-32bit.pickle",
+                "--out_path=data/test",
+            ],
+        },
+        {
+            "name": "TEST: Retrieve top sentences",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/sent_retrieval/sentence_retrieval.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--top_docs_path=data/test/top_10_docs.jsonl",
+                "--out_path=data/test",
+                "--n_gram_min=1",
+                "--n_gram_max=3"
+            ],
+        },
+        {
+            "name": "TEST: Retrieve Tables with Tapas",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/table_retrieval/retrieve_tables_with_tapas.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--output_dir=data/test/",
+                "--model_dir=tapas_models",
+                "--init_checkpoint=tapas_dual_encoder_proj_256_tiny/model.ckpt",
+                "--bert_config_file=tapas_dual_encoder_proj_256_tiny/bert_config.json",
+                "--top_docs_file=data/test/top_10_docs.jsonl",
+            ],
+            "justMyCode": false
+        },
+        {
+            "name": "TEST: Merge Table and Sentence Data",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/merge_table_and_sentence_data_test_set.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--top_tables_file=data/test/top_5_tables.jsonl",
+                "--top_sents_file=data/test/top_5_sents.jsonl",
+                "--table_out_path=data/test/tables/",
+                "--is_predict",
+                "--out_file=data/test/entailment_data.csv",
+            ],
+        },
+        {
+            "name": "TEST: Retrieve Table cells",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/table_retrieval/retrieve_table_cells.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--db_path=data/feverous_wikiv1.db",
+                "--data_file=data/test/top_5_tables.jsonl",
+                "--model_file=models/tapas_model.pth",
+                "--batch_size=64",
+                "--out_dir=data/test/",
+                "--out_file=data/test/top_table_cells.jsonl",
+            ],
+        },
+        {
+            "name": "TEST: Predict Veracity",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/entailment/predict_veracity.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--in_file=data/test/entailment_data.csv",
+                "--model_file=models/veracity_prediction_model.pth",
+                "--batch_size=16",
+                "--out_file=data/test/veracity_predictions.jsonl",
+            ],
+        },
+        {
+            "name": "TEST: Create final results",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/create_final_results.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--test_data_file=train_data/feverous_test_unlabeled.jsonl",
+                "--veracity_predictions_file=data/test/veracity_predictions.jsonl",
+                "--sentence_evidence_file=data/test/top_sents.jsonl",
+                "--table_evidence_file=data/test/top_table_cells.jsonl",
+                "--out_file=data/test/final_output.jsonl",
+            ],
+        },
+        {
+            "name": "TEST: Evaluate Results",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/data_processing/evaluate_final_results.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--input_path=data/test/final_output.jsonl",
+            ],
+        },
+    ]
+}
